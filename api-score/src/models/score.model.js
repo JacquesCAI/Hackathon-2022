@@ -8,8 +8,12 @@ const scoreSchema = new Schema({
         required: true,
     },
     score:{
-        type: Schema.Types.Number,
+        type: Number,
         default: 0
+    },
+    serverId: {
+        type: Number,
+        required: true
     },
     created_at: {
         type: Date,
