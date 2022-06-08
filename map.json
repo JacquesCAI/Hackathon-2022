@@ -32,7 +32,7 @@
                 {
                  "name":"openWebsite",
                  "type":"string",
-                 "value":"truc.html"
+                 "value":".\/games\/javascript-roulette\/index.html"
                 }, 
                 {
                  "name":"openWebsiteAllowApi",
@@ -40,9 +40,9 @@
                  "value":true
                 }, 
                 {
-                 "name":"openWebsitee",
+                 "name":"openWebsiteOld",
                  "type":"string",
-                 "value":"https:\/\/cdpn.io\/ozboware\/fullpage\/QWqEmgE"
+                 "value":"truc.html"
                 }],
          "type":"tilelayer",
          "visible":true,

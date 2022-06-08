@@ -12,7 +12,6 @@ let wheelnumbersAC = [0, 26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33,
 let container = document.createElement('div');
 container.setAttribute('id', 'container');
 document.body.append(container);
-
 startGame();
 
 let wheel = document.getElementsByClassName('wheel')[0];
@@ -51,6 +50,7 @@ function gameOver(){
 		};
 		notification.append(nBtn);
 	container.prepend(notification);
+	WA.chat.sendChatMessage('Vous avez perdu!', 'Roulette');
 }
 
 function buildWheel(){
@@ -537,6 +537,7 @@ function spin(){
 }
 
 function win(winningSpin, winValue, betTotal){
+	WA.chat.sendChatMessage('Vous avez gagné!', 'Roulette');
 	if(winValue > 0){
 		let notification = document.createElement('div');
 		notification.setAttribute('id', 'notification');
