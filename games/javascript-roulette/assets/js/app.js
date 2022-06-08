@@ -1,4 +1,5 @@
 let bankValue = 1000;
+let oldBankValue = bankValue;
 let currentBet = 0;
 let wager = 5;
 let lastWager = 0;
@@ -17,18 +18,6 @@ startGame();
 let wheel = document.getElementsByClassName('wheel')[0];
 let ballTrack = document.getElementsByClassName('ballTrack')[0];
 
-function resetGame(){
-	bankValue = 1000;
-	currentBet = 0;
-	wager = 5;
-	bet = [];
-	numbersBet = [];
-	previousNumbers = [];
-	document.getElementById('betting_board').remove();
-	document.getElementById('notification').remove();
-	buildBettingBoard();
-}
-
 function startGame(){
 	buildWheel();
 	buildBettingBoard();
@@ -41,16 +30,7 @@ function gameOver(){
 		nSpan.setAttribute('class', 'nSpan');
 		nSpan.innerText = 'Bankrupt';
 		notification.append(nSpan);
-
-		let nBtn = document.createElement('div');
-		nBtn.setAttribute('class', 'nBtn');
-		nBtn.innerText = 'Play again';
-		nBtn.onclick = function(){
-			resetGame();
-		};
-		notification.append(nBtn);
 	container.prepend(notification);
-	WA.chat.sendChatMessage('Vous avez perdu!', 'Roulette');
 }
 
 function buildWheel(){
@@ -366,7 +346,7 @@ function buildBettingBoard(){
 
 	let chipDeck = document.createElement('div');
 	chipDeck.setAttribute('class', 'chipDeck');
-	let chipValues = [1, 5, 10, 100, 'clear'];
+	let chipValues = [1, 5, 10, 100];
 	for(i = 0; i < chipValues.length; i++){
 		let cvi = i;
 		let chipColour = (i == 0)? 'red' : ((i == 1)? 'blue cdChipActive' : ((i == 2)? 'orange' : ((i == 3)? 'gold' : 'clearBet')));
@@ -513,10 +493,19 @@ function spin(){
 			}
 			win(winningSpin, winValue, betTotal);
 		}
-
 		currentBet = 0;
 		document.getElementById('bankSpan').innerText = '' + bankValue.toLocaleString("en-GB") + '';
 		document.getElementById('betSpan').innerText = '' + currentBet.toLocaleString("en-GB") + '';
+
+		if (bankValue > oldBankValue) {
+			WA.chat.sendChatMessage('Vous avez gagné '+(bankValue-oldBankValue)+' jetons', 'Roulette');
+		} else if (bankValue > 0) {
+			WA.chat.sendChatMessage('Vous avez perdu '+(oldBankValue-bankValue)+' jetons', 'Roulette');
+		} else {
+			WA.chat.sendChatMessage('Vous avez perdu tout vos jetons ...', 'Roulette');
+		}
+
+		oldBankValue = bankValue;
 
 		let pnClass = (numRed.includes(winningSpin))? 'pnRed' : ((winningSpin == 0)? 'pnGreen' : 'pnBlack');
 		let pnContent = document.getElementById('pnContent');
@@ -537,7 +526,6 @@ function spin(){
 }
 
 function win(winningSpin, winValue, betTotal){
-	WA.chat.sendChatMessage('Vous avez gagné!', 'Roulette');
 	if(winValue > 0){
 		let notification = document.createElement('div');
 		notification.setAttribute('id', 'notification');
