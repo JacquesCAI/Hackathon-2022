@@ -13,14 +13,11 @@ WA.onInit().then(() => {
 
     WA.room.onEnterLayer('clockZone').subscribe(() => {
         const today = new Date();
-        WA.chat.sendChatMessage('Hello world', 'Mr Robot');
         const time = today.getHours() + ":" + today.getMinutes();
         currentPopup = WA.ui.openPopup("clockPopup","It's " + time,[]);
     })
 
     WA.room.onLeaveLayer('clockZone').subscribe(closePopUp)
-
-    console.log({player: WA.player.id});
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
     bootstrapExtra().then(() => {
