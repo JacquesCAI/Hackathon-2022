@@ -371,16 +371,12 @@ window.onload = function() {
       resultArray.push(resultObj);
     }
 
-    console.log({resultArray});
-
     const lineResults = resultArray.reduce((acc,{name,position}) => [
         ...acc,
         ...(position === 100 ? [name]: [])
     ], []);
 
-    console.log({lineResults});
-
-    const score = !lineResults.some((id, index) => index < lineResults.length - 1 && id !== lineResults[index + 1]) ? 10 : 0;
+    const score = !lineResults.some((id, index) => index < lineResults.length - 1 && id !== lineResults[index + 1]) ? 50 : 0;
 
     WA.chat.sendChatMessage(score === 0 ? "Vous avez perdu ..." : "Vous avez gagné "+score+" points !", "Slot");
   }
