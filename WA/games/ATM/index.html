@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <script src="/actions/scoreAction.js"></script>
+    <script src="https://play.workadventu.re/iframe_api.js"></script>
+    <link rel="stylesheet" href="style.css">
+    <title>ATM</title>
+</head>
+<body>
+<h1>ATM</h1>
+<p id="loadingP">Chargement en cours ...</p>
+<div id="ATM">
+    <h2>Vous disposez actuellement de <span id="currentScore"></span> jetons</h2>
+    <label>
+        Combiens de jetons voulez vous récupérer ?
+        <input type="number" id="jetonsToGet" value="0" min="0">
+    </label>
+    <input type="button" id="getJetons" value="Récupérer">
+    <div id="jetonsAdded">Jetons récupérés avec succès!</div>
+</div>
+</body>
+<script src="script.js"></script>
+</html>
