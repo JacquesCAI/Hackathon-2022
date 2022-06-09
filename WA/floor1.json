@@ -180,13 +180,13 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":20,
          "id":57,
-         "name":"entry",
+         "name":"vip-entry",
          "opacity":1,
          "properties":[
                 {
-                 "name":"start",
-                 "type":"string",
-                 "value":"vipExit"
+                 "name":"startLayer",
+                 "type":"bool",
+                 "value":true
                 }],
          "type":"tilelayer",
          "visible":true,
@@ -217,14 +217,8 @@
             0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
          "height":20,
          "id":56,
-         "name":"exit",
+         "name":"vip-exit",
          "opacity":1,
-         "properties":[
-                {
-                 "name":"exitSceneUrl",
-                 "type":"string",
-                 "value":"vip.json"
-                }],
          "type":"tilelayer",
          "visible":true,
          "width":31,
@@ -305,8 +299,8 @@
                  "rotation":0,
                  "type":"",
                  "visible":true,
-                 "width":86.5588763677936,
-                 "x":612.444879960804,
+                 "width":100,
+                 "x":600,
                  "y":55.5283357831129
                 }],
          "opacity":1,

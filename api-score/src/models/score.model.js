@@ -3,6 +3,10 @@ const {Schema} = require("mongoose");
 const {db} = require("../bin/bdd");
 
 const scoreSchema = new Schema({
+    userId: {
+      type: String,
+      required: true
+    },
     userName: {
         type: String,
         required: true,
@@ -12,18 +16,18 @@ const scoreSchema = new Schema({
         default: 0
     },
     serverId: {
-        type: Number,
+        type: String,
         required: true
     },
     created_at: {
         type: Date,
-        required: false
+        default: () => new Date()
     },
     updated_at: {
         type: Date,
-        required: false
+        default: () => new Date()
     }
 });
 
-const score = db.model("score", scoreSchema);
-module.exports = {score};
+const Score = db.model("score", scoreSchema);
+module.exports = {Score};
