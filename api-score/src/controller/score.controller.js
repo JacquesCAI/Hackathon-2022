@@ -11,9 +11,9 @@ exports.addScore = async (req, res) => {
     const scoreObj = await Score.findOne({userId});
 
     if (scoreObj === null)
-        return res.sendStatus(404)
+        return res.sendStatus(404);
 
-    scoreObj.score = Math.max(0, scoreObj.score+parseInt(score));
+    scoreObj.score = Math.min(Math.max(0, scoreObj.score+parseInt(score)), 1000);
     scoreObj.updatedAt = new Date();
 
     scoreObj.save();

@@ -62,6 +62,9 @@ window.onload = function () {
             return;
         }
 
+        if (currentScore+bet >= 1000 && !confirm("Attention, vous risquez d'atteindre la limite de 1000 jetons. Voulez vous quand même miser ?"))
+            return;
+
         spin();
     });
 
@@ -424,9 +427,12 @@ window.onload = function () {
 
         const bet = parseInt(document.getElementById("bet").value);
 
-        const score = !lineResults.some((id, index) => index < lineResults.length - 1 && id !== lineResults[index + 1]) ?
+        let score = !lineResults.some((id, index) => index < lineResults.length - 1 && id !== lineResults[index + 1]) ?
             bet
             : -1*bet;
+
+        if (currentScore+score > 1000)
+            score = 1000 - currentScore;
 
         actions.addScore(WA.player.id, score);
 

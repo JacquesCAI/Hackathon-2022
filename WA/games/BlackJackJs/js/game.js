@@ -1,4 +1,6 @@
-function init(){
+WA.onInit().then(init);
+
+async function init(){
 
 	var stage = new createjs.Stage("canvas");
 
@@ -55,14 +57,11 @@ function init(){
 				.wait(1000)
 				.to({alpha: 0}, 1000, createjs.Ease.getPowInOut(1));
 		},
-
 		reset: function(){
-			['userName', 'chips', 'funds'].forEach(v => localStorage.removeItem('BlackJackJs-' + v));
 			location.reload();
 		},
 
 		over: function(){
-			['userName', 'chips', 'funds'].forEach(v => localStorage.removeItem('BlackJackJs-' + v));
 			stage.removeAllChildren();
 			var gameOverText = new createjs.Text('Game Over', '50px Arial', '#fff');
 			gameOverText.center(1, 1);
@@ -92,12 +91,12 @@ function init(){
 			};
 
 			while(value !== 0){
-				Object.keys(chips).reverse().forEach(function(chip){
+				for (const chip of Object.keys(chips).reverse()) {
 					if(value >= game.chipsValue[chip]){
 						value -= game.chipsValue[chip];
 						chips[chip]++;
 					}
-				});
+				}
 			}
 
 			return chips;
@@ -111,19 +110,9 @@ function init(){
 			createjs.Sound.registerSound('assets/sounds/sfx_shieldUp.ogg', 'win');
 			createjs.Sound.registerSound('assets/Bonus/cardPlace1.ogg', 'card');
 			createjs.Sound.registerSound('assets/Bonus/chipsCollide1.ogg', 'chip');
-			if(localStorage.getItem('BlackJackJs-userName')){
-				player.name.value = localStorage.getItem('BlackJackJs-userName');
-				player.funds = localStorage.getItem('BlackJackJs-funds');
-				player.chips = JSON.parse(localStorage.getItem('BlackJackJs-chips'));
-				this.start();
-			}
-			else{
-					player.name.value = WA.player.name
-					localStorage.setItem('BlackJackJs-userName', player.name.value);
-					localStorage.setItem('BlackJackJs-funds', currenUserScore);
-					localStorage.setItem('BlackJackJs-chips', JSON.stringify(player.chips));
-					game.start();
-			}
+
+			player.name.value = WA.player.name;
+			game.start();
 		},
 
 		start: function(){
@@ -163,9 +152,9 @@ function init(){
 			bank.deck = [];
 			player.dealt = 0;
 			player.chips = game.balanceChips(player.funds);
+			player.applyAmountUpdate();
 			game.resetChips();
 			game.addChips();
-			player.store();
 			bank.cardsContainer.removeAllChildren();
 			player.cardsContainer.removeAllChildren();
 			this.message.text.text = messages.bet;
@@ -345,7 +334,7 @@ function init(){
 			var color = chip.color;
 			player.dealt += this.chipsValue[color]; //add chip value to player.dealt
 			player.chips[color] -= 1; //Reduce player chips number
-			player.funds -= game.chipsValue[color];
+			player.removeAmount(game.chipsValue[color]);
 			player.fundsText.update();
 			game.dealt[color] += 1;
 			this.addChips();
@@ -406,25 +395,35 @@ function init(){
 
 	};
 
-	let currenUserScore = async () => {
-		await actions.getScore(WA.player.id).then((res)=>{
-			return res.data.score
-		});
-	};
+	let currenUserScore = await actions.getScore(WA.player.id).then(data => data.json());
 
 	var player = {
-
 		deck: [],
 		name: {
 			value: WA.player.name,
 			text: false,
 		},
+		id: WA.player.id,
 		cardsContainer: false,
 		chipsContainer: false,
 		blackjack: false,
 		insurance: false,
 		doubled: false,
-		funds: currenUserScore ,
+		applyAmountUpdate() {
+			const diff = this.funds-this.oldFunds;
+			actions.addScore(this.id, diff).then(() => {
+				this.oldFunds = this.funds;
+				WA.chat.sendChatMessage(diff > 0 ? "Vous avez gagné "+diff+" jetons !" : "Vous avez perdu "+(-1 * diff)+" jetons", "Blackjack")
+			});
+		},
+		addAmount: function (amount) {
+			this.funds = Math.max(0,Math.min(1000,this.funds+amount));
+		},
+		removeAmount: function (amount) {
+			this.addAmount(-1 * amount)
+		},
+		funds: currenUserScore,
+		oldFunds: currenUserScore,
 		fundsText: {
 			text: false,
 			init: function(){
@@ -463,7 +462,7 @@ function init(){
 		insure: function(){
 			if(game.inProgress && bank.deck.length === 2 && bank.deck[0].value === 'A'){
 				this.insurance = Math.round(this.dealt / 2);
-				this.funds -= this.insurance;
+				this.removeAmount(this.insurance);
 				this.chips = game.balanceChips(this.funds);
 				this.fundsText.update();
 				game._alert(messages.warning.insured);
@@ -477,10 +476,9 @@ function init(){
 				if(this.funds >= this.dealt){
 					game._alert(messages.warning.doubled);
 					this.doubled = true;
-					this.funds -= this.dealt;
+					this.removeAmount(this.dealt)
 					this.dealt *= 2;
 					this.chips = game.balanceChips(this.funds);
-					this.store();
 					game.addChips();
 					for(var chip in game.dealt){
 						//update graphic dealtcontainer
@@ -493,9 +491,10 @@ function init(){
 							game.dealtChipContainer.addChild(chipImg);
 						}
 					}
-					for(var chip in game.dealt)
-						if(game.dealt[chip])
+					for(var chip in game.dealt) {
+						if (game.dealt[chip])
 							game.dealt[chip] *= 2;
+					}
 					player.fundsText.update();
 				}
 				else
@@ -508,10 +507,9 @@ function init(){
 		giveUp: function(){
 			if(game.inProgress && this.deck.length === 2 && bank.deck.length === 2){
 				game._alert(messages.warning.gaveUp);
-				this.funds += Math.round(this.dealt / 2);
+				this.addAmount(Math.round(this.dealt / 2));
 				this.chips = game.balanceChips(this.funds);
 				this.fundsText.update();
-				player.store();
 				game.addChips();
 				game.end();
 			}
@@ -524,9 +522,9 @@ function init(){
 
 			setTimeout(function(){
 				createjs.Sound.play('win');
-				player.funds += player.blackjack ? player.dealt * 3 : player.dealt * 2;
+				const winAmount = player.blackjack ? player.dealt * 3 : player.dealt * 2;
+				player.addAmount(winAmount)
 				game.end();
-				actions.addScore(WA.player.id,player.funds)
 				player.fundsText.update();
 			}, 2000);
 		},
@@ -538,13 +536,12 @@ function init(){
 			setTimeout(function(){
 				createjs.Sound.play('lose');
 				if(bank.blackjack && player.insurance){
-					player.funds += player.insurance * 2;
+					player.addAmount(player.insurance * 2);
 					player.chips = game.balanceChips(player.funds);
 					player.fundsText.update();
 				}
 				if(player.funds <= 0)
 					return game.over();
-				actions.getScore(WA.player.id,player.chips)
 				game.end();
 			}, 2000);
 		},
@@ -553,20 +550,15 @@ function init(){
 			game.message.text.text = messages.draw;
 			setTimeout(function(){
 				if(bank.blackjack && player.insurance){
-					player.funds += player.insurance * 2;
+					player.addAmount(player.insurance * 2);
 					player.chips = game.balanceChips(player.funds);
 					player.fundsText.update();
 				}
 				game.end();
-				player.funds += player.dealt;
+				player.addAmount(player.dealt);
 				player.fundsText.update();
 			}, 2000);
-		},
-
-		store: function(){
-			localStorage.setItem('BlackJackJs-funds', this.funds);
-			localStorage.setItem('BlackJackJs-chips', JSON.stringify(this.chips));
-		},
+		}
 
 	};
 

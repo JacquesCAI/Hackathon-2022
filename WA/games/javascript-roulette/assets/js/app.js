@@ -438,7 +438,6 @@ function setBet(e, n, t, o){
 			spinBtn.setAttribute('class', 'spinBtn');
 			spinBtn.innerText = 'spin';
 			spinBtn.onclick = function(){
-				this.remove();
 				spin();
 			};
 			container.append(spinBtn);
@@ -487,6 +486,9 @@ function setBet(e, n, t, o){
 }
 
 function spin(){
+	if (oldBankValue+currentBet >= 1000 && !confirm("Attention, vous risquez d'atteindre la limite de 1000 jetons. Voulez vous quand même miser ?"))
+		return;
+	document.getElementsByClassName('spinBtn')[0].remove()
 	var winningSpin = Math.floor(Math.random() * 36);
 	spinWheel(winningSpin);
 	setTimeout(function(){
@@ -503,19 +505,27 @@ function spin(){
 			}
 			win(winningSpin, winValue, betTotal);
 		}
+
+		if (bankValue > 1000)
+			bankValue = 1000;
+		if (bankValue < 0)
+			bankValue = 0;
+
 		currentBet = 0;
 		document.getElementById('bankSpan').innerText = '' + bankValue.toLocaleString("en-GB") + '';
 		document.getElementById('betSpan').innerText = '' + currentBet.toLocaleString("en-GB") + '';
 
-		if (bankValue > oldBankValue) {
-			WA.chat.sendChatMessage('Vous avez gagné '+(bankValue-oldBankValue)+' jetons', 'Roulette');
-		} else if (bankValue > 0) {
-			WA.chat.sendChatMessage('Vous avez perdu '+(oldBankValue-bankValue)+' jetons', 'Roulette');
-		} else {
-			WA.chat.sendChatMessage('Vous avez perdu tout vos jetons ...', 'Roulette');
+		const diff = bankValue-oldBankValue;
+		if (diff > 0) {
+			WA.chat.sendChatMessage('Vous avez gagné '+diff+' jetons', 'Roulette');
+		} else if (diff < 0) {
+			if (bankValue === 0)
+				WA.chat.sendChatMessage('Vous avez tout perdu', 'Roulette')
+			else
+				WA.chat.sendChatMessage('Vous avez perdu '+(-1 * diff)+' jetons', 'Roulette');
 		}
 
-		actions.addScore(WA.player.id, bankValue-oldBankValue);
+		actions.addScore(WA.player.id, diff);
 
 		oldBankValue = bankValue;
 

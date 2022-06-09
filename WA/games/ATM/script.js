@@ -7,6 +7,18 @@ function showCurrentScore(score) {
     const currentScoreSpan = document.getElementById("currentScore");
 
     currentScoreSpan.innerText = score;
+
+    showOrHideMaxScore();
+}
+
+function showOrHideMaxScore() {
+    const maxSpan = document.getElementById("maxJetons");
+    if (currentScore === 1000) {
+        maxSpan.style.display = "none";
+    } else {
+        maxSpan.style.display = "inline-block";
+        maxSpan.innerText = "(max: "+(1000-currentScore)+")";
+    }
 }
 
 WA.onInit().then(() => {
@@ -19,7 +31,7 @@ WA.onInit().then(() => {
     actions.getScore(WA.player.id)
         .then(data => data.json())
         .then(score => {
-            showCurrentScore(score)
+            showCurrentScore(score);
         });
 })
 
@@ -28,14 +40,19 @@ document.getElementById("getJetons").addEventListener("click", () => {
 
     if (isNaN(jetonsToGet) || jetonsToGet <= 0) {
         alert("Rentrez un nombre de jetons valides");
-        return 0;
+        return;
+    }
+
+    if (currentScore+jetonsToGet > 1000) {
+        alert("Vous ne pouvez pas avoir plus de 1000 jetons");
+        return;
     }
 
     actions.addScore(WA.player.id, jetonsToGet).then(() => {
         const jetonsAddedSpan = document.getElementById("jetonsAdded");
         jetonsAddedSpan.style.display = "block";
 
-        showCurrentScore(currentScore+jetonsToGet)
+        showCurrentScore(currentScore+jetonsToGet);
 
         setTimeout(() => {
             jetonsAddedSpan.style.display = "none";
