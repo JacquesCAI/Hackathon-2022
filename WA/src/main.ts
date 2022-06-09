@@ -11,10 +11,8 @@ WA.onInit().then(() => {
     console.log('Scripting API ready');
     console.log('Player tags: ',WA.player.tags)
 
-    WA.room.onEnterLayer('clockZone').subscribe(() => {
-        const today = new Date();
-        const time = today.getHours() + ":" + today.getMinutes();
-        currentPopup = WA.ui.openPopup("clockPopup","It's " + time,[]);
+    WA.room.onEnterLayer('infoZone').subscribe(() => {
+        currentPopup = WA.ui.openPopup("infoPopup","Bienvenue dans la zone VIP!",[]);
     })
 
 
@@ -22,7 +20,13 @@ WA.onInit().then(() => {
         iframe: '/ranking/index.html'
     })
 
-    WA.room.onLeaveLayer('clockZone').subscribe(closePopUp)
+    WA.room.onEnterLayer('vipInfoZone').subscribe(() => {
+        currentPopup = WA.ui.openPopup("VipZonePopup","Vous avez accès à la zone VIP!",[]);
+    })
+
+    WA.room.onLeaveLayer('infoZone').subscribe(closePopUp)
+    
+    WA.room.onLeaveLayer('vipInfoZone').subscribe(closePopUp)
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
     bootstrapExtra().then(() => {
