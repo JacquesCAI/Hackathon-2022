@@ -1,0 +1,35 @@
+version: "3.7"
+
+services:
+  score-bdd-service:
+    image: mongo:bionic
+    container_name: score-bdd-service
+    networks:
+      - db
+    environment:
+      - MONGO_INITDB_DATABASE=${MONGO_DATABASE}
+    volumes:
+      - mongo:/usr/local/mongo_db_volumes
+
+  score-api-service:
+    image: node:16
+    working_dir: /app
+    env_file: .env
+    container_name: score-api-service
+    volumes:
+      - ./:/app
+    ports:
+      - ${PORT_SCORE_SERVICE}:3000
+    command: sh -c "npm install && npm run dev"
+    networks:
+      - exterior
+      - db
+
+networks:
+  exterior:
+    internal: false
+  db:
+    internal: true
+
+volumes:
+  mongo: {}

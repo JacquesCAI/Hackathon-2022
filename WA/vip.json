@@ -127,9 +127,9 @@
          "opacity":1,
          "properties":[
                 {
-                 "name":"exitSceneUrl",
+                 "name":"exitUrl",
                  "type":"string",
-                 "value":"floor1.json#start&moveTo=vipExit"
+                 "value":"floor1.json#start&moveTo=vip-entry"
                 }],
          "type":"tilelayer",
          "visible":true,
