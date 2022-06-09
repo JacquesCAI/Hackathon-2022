@@ -1,6 +1,7 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
+import casino from "./casino";
 
 console.log('Script started successfully');
 
@@ -17,12 +18,9 @@ WA.onInit().then(() => {
         currentPopup = WA.ui.openPopup("clockPopup","It's " + time,[]);
     })
 
-
-    WA.ui.registerMenuCommand('Votre classement',{
-        iframe: '/ranking/index.html'
-    })
-
     WA.room.onLeaveLayer('clockZone').subscribe(closePopUp)
+
+    casino();
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
     bootstrapExtra().then(() => {
