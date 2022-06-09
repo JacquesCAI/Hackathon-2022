@@ -1,0 +1,53 @@
+version: '3'
+services:
+  WA:
+    image: node:16-alpine3.11
+    ports :
+      - "3000:3000"
+    working_dir: /WA
+    volumes:
+      - ./WA:/WA
+    networks:
+      - exterior
+    command: npm run dev
+
+  api-score:
+    image: node:16-alpine3.11
+    volumes:
+      - ./api-score:/api-score
+    working_dir: /api-score
+    env_file:
+      - .env
+    depends_on:
+      - mongodb
+    command: npm run dev
+    networks:
+      - exterior
+      - bdd
+
+  mongodb:
+    image: mongo:bionic
+    volumes:
+      - ./mongodb/mongod.conf:/etc/mongod.conf
+      - data:/data/db/
+      - ./mongodb/data/log/:/var/log/mongodb/
+      - ./mongodb/initdb.d/:/docker-entrypoint-initdb.d/
+    env_file:
+      - .env
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    ports:
+      - "27017:27017"
+    networks:
+      - bdd
+
+networks:
+  bdd:
+    internal: true
+  exterior:
+    internal: false
+
+volumes:
+  data: {}

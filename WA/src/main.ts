@@ -17,6 +17,11 @@ WA.onInit().then(() => {
         currentPopup = WA.ui.openPopup("clockPopup","It's " + time,[]);
     })
 
+
+    WA.ui.registerMenuCommand('Votre classement',{
+        iframe: '/ranking/index.html'
+    })
+
     WA.room.onLeaveLayer('clockZone').subscribe(closePopUp)
 
     // The line below bootstraps the Scripting API Extra library that adds a number of advanced properties/features to WorkAdventure
