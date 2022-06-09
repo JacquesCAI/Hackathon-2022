@@ -408,8 +408,7 @@ function init(){
 
 	let currenUserScore = async () => {
 		await actions.getScore(WA.player.id).then((res)=>{
-			const result = JSON.parse(res.text)
-			return result.data.score
+			return res.data.score
 		});
 	};
 

@@ -12,6 +12,7 @@
     <script>
         const $j = $;
     </script>
+    <script src="/actions/scoreAction.js"></script>
     <script src="https://play.workadventu.re/iframe_api.js"></script>
     <script src="js/main.js"></script>
 
@@ -28,7 +29,11 @@
         <h5><a href="https://github.com/nicholaswmin/slotMachine">Github - @nicholaswmin</a></h5>
     </div>
     <canvas id="myCanvas" hidpi="off" resize></canvas>
-    <div id="spinBtn">SPIN!</div>
+    <div id="spinBtn" disabled="disabled">SPIN!</div>
+    <label>
+        Combien miser (max <span id="maxSpan"></span>) ?
+    </label>
+    <input min="0" type="number" id="bet" disabled="disabled">
 </div>
 
 <!--Fruit Images-->

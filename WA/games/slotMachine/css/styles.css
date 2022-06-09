@@ -49,21 +49,30 @@ h1,h2,h3,h4,h5{
 	font-style:italic;
 }
 
-#spinBtn{
+#spinBtn {
 	padding:20px 12px;
 	background-color:#666;
-	color:#eee;
 	font-size:24px;
 	text-align:center;
+
+	user-select: none;
+
+	color: #DDD;
+}
+
+#spinBtn.enabled {
+	color:#eee;
 	cursor:pointer;
 	transition: 0.5s;
 }
 
-#spinBtn:hover{
+#spinBtn.enabled:hover{
 	background-color:#333;
 	color:#fff;
 }
 
 
-
+input[disabled='disabled'] {
+	background: #DDD;
+}
 

@@ -1,5 +1,5 @@
-let bankValue = 1000;
-let oldBankValue = bankValue;
+let bankValue = null;
+let oldBankValue = null;
 let currentBet = 0;
 let wager = 5;
 let lastWager = 0;
@@ -13,10 +13,20 @@ let wheelnumbersAC = [0, 26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33,
 let container = document.createElement('div');
 container.setAttribute('id', 'container');
 document.body.append(container);
-startGame();
 
-let wheel = document.getElementsByClassName('wheel')[0];
+
+let wheel;
 let ballTrack = document.getElementsByClassName('ballTrack')[0];
+
+WA.onInit().then(() => {
+	actions.getScore(WA.player.id)
+		.then(data => data.json())
+		.then(score => {
+			bankValue = score;
+			oldBankValue = bankValue;
+			startGame();
+		})
+});
 
 function startGame(){
 	buildWheel();
@@ -34,7 +44,7 @@ function gameOver(){
 }
 
 function buildWheel(){
-	let wheel = document.createElement('div');
+	wheel = document.createElement('div');
 	wheel.setAttribute('class', 'wheel');
 
 	let outerRim = document.createElement('div');
@@ -62,7 +72,7 @@ function buildWheel(){
 	pocketsRim.setAttribute('class', 'pocketsRim');
 	wheel.append(pocketsRim);
 
-	let ballTrack = document.createElement('div');
+	ballTrack = document.createElement('div');
 	ballTrack.setAttribute('class', 'ballTrack');
 	let ball = document.createElement('div');
 	ball.setAttribute('class', 'ball');
@@ -504,6 +514,8 @@ function spin(){
 		} else {
 			WA.chat.sendChatMessage('Vous avez perdu tout vos jetons ...', 'Roulette');
 		}
+
+		actions.addScore(WA.player.id, bankValue-oldBankValue);
 
 		oldBankValue = bankValue;
 
