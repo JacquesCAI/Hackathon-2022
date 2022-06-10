@@ -62,7 +62,7 @@ window.onload = function () {
             return;
         }
 
-        if (currentScore+bet >= 1000 && !confirm("Attention, vous risquez d'atteindre la limite de 1000 jetons. Voulez vous quand même miser ?"))
+        if (currentScore+parseInt(bet) > 1000 && !confirm("Attention, vous risquez d'atteindre la limite de 1000 jetons. Voulez vous quand même miser ?"))
             return;
 
         spin();

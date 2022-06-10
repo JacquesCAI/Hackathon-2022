@@ -486,7 +486,7 @@ function setBet(e, n, t, o){
 }
 
 function spin(){
-	if (oldBankValue+currentBet >= 1000 && !confirm("Attention, vous risquez d'atteindre la limite de 1000 jetons. Voulez vous quand même miser ?"))
+	if (oldBankValue+currentBet > 1000 && !confirm("Attention, vous risquez d'atteindre la limite de 1000 jetons. Voulez vous quand même miser ?"))
 		return;
 	document.getElementsByClassName('spinBtn')[0].remove()
 	var winningSpin = Math.floor(Math.random() * 36);
