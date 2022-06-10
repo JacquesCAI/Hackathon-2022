@@ -6,15 +6,16 @@ exports.addScore = async (req, res) => {
     if (typeof(score) != "number")
         return res.sendStatus(400);
 
-    const {userId} = req.params;
+    const {userId, serverId} = req.params;
 
-    const scoreObj = await Score.findOne({userId});
-
-    if (scoreObj === null)
-        return res.sendStatus(404);
+    const scoreObj = await Score.findOne({userId,serverId}).then(res =>
+        res??Score.create({
+                userId,
+                serverId
+            })
+    );
 
     scoreObj.score = Math.min(Math.max(0, scoreObj.score+parseInt(score)), 1000);
-    scoreObj.updatedAt = new Date();
 
     scoreObj.save();
 
@@ -22,32 +23,14 @@ exports.addScore = async (req, res) => {
 };
 
 exports.getScore = async (req, res) => {
-    const {userId} = req.params;
-    const scoreObj = await Score.findOne({userId});
+    const {userId,serverId} = req.params;
 
-    if (scoreObj === null)
-        return res.sendStatus(404)
+    const scoreObj = await Score.findOne({userId,serverId}).then(res =>
+            res??Score.create({
+                userId,
+                serverId
+            })
+    );
 
     res.status(200).json(scoreObj.score);
-}
-
-exports.register = async (req,res) => {
-    const {userId} = req.params;
-
-    const {serverId,userName} = req.body;
-
-    if (!serverId || !userName)
-        return res.sendStatus(400);
-
-    const scoreObj = await Score.findOne({userId});
-
-    if (scoreObj)
-        return res.sendStatus(201);
-
-    await Score.create({
-        userId,
-        serverId,
-        userName
-    });
-    res.sendStatus(201);
 }

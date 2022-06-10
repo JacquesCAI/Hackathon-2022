@@ -395,7 +395,7 @@ async function init(){
 
 	};
 
-	let currenUserScore = await actions.getScore(WA.player.id).then(data => data.json());
+	let currenUserScore = await actions.getScore(location.hostname,WA.player.id).then(data => data.json());
 
 	var player = {
 		deck: [],
@@ -411,7 +411,7 @@ async function init(){
 		doubled: false,
 		applyAmountUpdate() {
 			const diff = this.funds-this.oldFunds;
-			actions.addScore(this.id, diff).then(() => {
+			actions.addScore(location.hostname,this.id, diff).then(() => {
 				this.oldFunds = this.funds;
 				WA.chat.sendChatMessage(diff > 0 ? "Vous avez gagné "+diff+" jetons !" : "Vous avez perdu "+(-1 * diff)+" jetons", "Blackjack")
 			});
@@ -438,7 +438,7 @@ async function init(){
 		},
 		betted: false,
 		dealt: 0,
-		chips: game.balanceChips(1000),
+		chips: game.balanceChips(currenUserScore),
 
 		hit: function(){
 			if(this.betted){

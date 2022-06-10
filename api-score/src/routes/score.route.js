@@ -1,8 +1,7 @@
 const scoreController = require('../controller/score.controller')
 
 module.exports = (app) => {
-    app.route('/score/:userId')
+    app.route('/score/:serverId/:userId')
         .put(scoreController.addScore)
         .get(scoreController.getScore)
-    app.post('/score/:userId/register', scoreController.register);
 }

@@ -29,7 +29,7 @@ WA.onInit()
         const spinBtn = document.getElementById("spinBtn")
         spinBtn.classList.add('enabled');
 
-        actions.getScore(WA.player.id)
+        actions.getScore(location.hostname,WA.player.id)
             .then(data => data.json())
             .then(score => {
                 checkMaxScoreBetInput(score, input);
@@ -434,7 +434,7 @@ window.onload = function () {
         if (currentScore+score > 1000)
             score = 1000 - currentScore;
 
-        actions.addScore(WA.player.id, score);
+        actions.addScore(location.hostname,WA.player.id, score);
 
         checkMaxScoreBetInput(currentScore+score, document.getElementById("bet"));
 
