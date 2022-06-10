@@ -51,13 +51,3 @@ exports.register = async (req,res) => {
     });
     res.sendStatus(201);
 }
-
-exports.ranking = async (req,res) => {
-    const {serverId} = req.params;
-
-    const scoresObj = await Score.find({serverId}).sort({score: -1})
-
-    res.status(200).json(scoresObj.map(({userName,score}) => ({
-        userName, score
-    })))
-}
