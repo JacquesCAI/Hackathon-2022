@@ -19,7 +19,7 @@ let wheel;
 let ballTrack = document.getElementsByClassName('ballTrack')[0];
 
 WA.onInit().then(() => {
-	actions.getScore(location.hostname,WA.player.id)
+	scoreActions.getScore(location.hostname,WA.player.id)
 		.then(data => data.json())
 		.then(score => {
 			bankValue = score;
@@ -525,7 +525,7 @@ function spin(){
 				WA.chat.sendChatMessage('Vous avez perdu '+(-1 * diff)+' jetons', 'Roulette');
 		}
 
-		actions.addScore(location.hostname,WA.player.id, diff);
+		scoreActions.addScore(location.hostname,WA.player.id, diff);
 
 		oldBankValue = bankValue;
 
