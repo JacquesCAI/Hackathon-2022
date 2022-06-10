@@ -28,7 +28,7 @@ WA.onInit().then(() => {
     const ATM = document.getElementById("ATM");
     ATM.style.display = "block";
 
-    actions.getScore(WA.player.id)
+    actions.getScore(location.hostname,WA.player.id)
         .then(data => data.json())
         .then(score => {
             showCurrentScore(score);
@@ -48,7 +48,7 @@ document.getElementById("getJetons").addEventListener("click", () => {
         return;
     }
 
-    actions.addScore(WA.player.id, jetonsToGet).then(() => {
+    actions.addScore(location.hostname,WA.player.id, jetonsToGet).then(() => {
         const jetonsAddedSpan = document.getElementById("jetonsAdded");
         jetonsAddedSpan.style.display = "block";
 

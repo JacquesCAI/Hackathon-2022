@@ -7,10 +7,6 @@ const scoreSchema = new Schema({
       type: String,
       required: true
     },
-    userName: {
-        type: String,
-        required: true,
-    },
     score:{
         type: Number,
         default: 0
@@ -18,14 +14,6 @@ const scoreSchema = new Schema({
     serverId: {
         type: String,
         required: true
-    },
-    created_at: {
-        type: Date,
-        default: () => new Date()
-    },
-    updated_at: {
-        type: Date,
-        default: () => new Date()
     }
 });
 
