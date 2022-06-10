@@ -1,8 +1,8 @@
-const url = "http://" + location.hostname + "/score"
+const scoreUrl = "http://" + location.hostname + "/score"
 
-const actions = {
+const scoreActions = {
     addScore: (serverId,userId,score) =>
-        fetch(url+"/"+serverId+"/"+userId, {
+        fetch(scoreUrl+"/"+serverId+"/"+userId, {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
@@ -13,5 +13,5 @@ const actions = {
             })
         }),
     getScore: (serverId,userId) =>
-        fetch(url+"/"+serverId+"/"+userId)
+        fetch(scoreUrl+"/"+serverId+"/"+userId)
 }
