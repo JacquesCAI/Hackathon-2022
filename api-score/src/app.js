@@ -3,6 +3,8 @@ import dotenv from 'dotenv';
 import express from 'express';
 import xss from 'xss-clean';
 import {connect} from "./bin/bdd.js";
+const scoreRoute = require('./routes/score.route');
+const catalogRoute = require('./routes/catalog.route');
 
 dotenv.config();
 const app = express();
@@ -13,7 +15,7 @@ app.use(cors());
 
 connect()
 
-const scoreRoute = require('./routes/score.route');
 scoreRoute(app);
+catalogRoute(app);
 
 export default app;
