@@ -1,6 +1,7 @@
 /// <reference types="@workadventure/iframe-api-typings" />
 
 import { bootstrapExtra } from "@workadventure/scripting-api-extra";
+bootstrapExtra();
 import casino from "./casino";
 
 console.log('Script started successfully');
