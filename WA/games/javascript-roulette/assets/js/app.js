@@ -1,5 +1,5 @@
-let bankValue = 1000;
-let oldBankValue = bankValue;
+let bankValue = null;
+let oldBankValue = null;
 let currentBet = 0;
 let wager = 5;
 let lastWager = 0;
@@ -13,10 +13,20 @@ let wheelnumbersAC = [0, 26, 3, 35, 12, 28, 7, 29, 18, 22, 9, 31, 14, 20, 1, 33,
 let container = document.createElement('div');
 container.setAttribute('id', 'container');
 document.body.append(container);
-startGame();
 
-let wheel = document.getElementsByClassName('wheel')[0];
+
+let wheel;
 let ballTrack = document.getElementsByClassName('ballTrack')[0];
+
+WA.onInit().then(() => {
+	actions.getScore(WA.player.id)
+		.then(data => data.json())
+		.then(score => {
+			bankValue = score;
+			oldBankValue = bankValue;
+			startGame();
+		})
+});
 
 function startGame(){
 	buildWheel();
@@ -34,7 +44,7 @@ function gameOver(){
 }
 
 function buildWheel(){
-	let wheel = document.createElement('div');
+	wheel = document.createElement('div');
 	wheel.setAttribute('class', 'wheel');
 
 	let outerRim = document.createElement('div');
@@ -62,7 +72,7 @@ function buildWheel(){
 	pocketsRim.setAttribute('class', 'pocketsRim');
 	wheel.append(pocketsRim);
 
-	let ballTrack = document.createElement('div');
+	ballTrack = document.createElement('div');
 	ballTrack.setAttribute('class', 'ballTrack');
 	let ball = document.createElement('div');
 	ball.setAttribute('class', 'ball');
@@ -428,7 +438,6 @@ function setBet(e, n, t, o){
 			spinBtn.setAttribute('class', 'spinBtn');
 			spinBtn.innerText = 'spin';
 			spinBtn.onclick = function(){
-				this.remove();
 				spin();
 			};
 			container.append(spinBtn);
@@ -477,6 +486,9 @@ function setBet(e, n, t, o){
 }
 
 function spin(){
+	if (oldBankValue+currentBet >= 1000 && !confirm("Attention, vous risquez d'atteindre la limite de 1000 jetons. Voulez vous quand même miser ?"))
+		return;
+	document.getElementsByClassName('spinBtn')[0].remove()
 	var winningSpin = Math.floor(Math.random() * 36);
 	spinWheel(winningSpin);
 	setTimeout(function(){
@@ -493,17 +505,27 @@ function spin(){
 			}
 			win(winningSpin, winValue, betTotal);
 		}
+
+		if (bankValue > 1000)
+			bankValue = 1000;
+		if (bankValue < 0)
+			bankValue = 0;
+
 		currentBet = 0;
 		document.getElementById('bankSpan').innerText = '' + bankValue.toLocaleString("en-GB") + '';
 		document.getElementById('betSpan').innerText = '' + currentBet.toLocaleString("en-GB") + '';
 
-		if (bankValue > oldBankValue) {
-			WA.chat.sendChatMessage('Vous avez gagné '+(bankValue-oldBankValue)+' jetons', 'Roulette');
-		} else if (bankValue > 0) {
-			WA.chat.sendChatMessage('Vous avez perdu '+(oldBankValue-bankValue)+' jetons', 'Roulette');
-		} else {
-			WA.chat.sendChatMessage('Vous avez perdu tout vos jetons ...', 'Roulette');
+		const diff = bankValue-oldBankValue;
+		if (diff > 0) {
+			WA.chat.sendChatMessage('Vous avez gagné '+diff+' jetons', 'Roulette');
+		} else if (diff < 0) {
+			if (bankValue === 0)
+				WA.chat.sendChatMessage('Vous avez tout perdu', 'Roulette')
+			else
+				WA.chat.sendChatMessage('Vous avez perdu '+(-1 * diff)+' jetons', 'Roulette');
 		}
+
+		actions.addScore(WA.player.id, diff);
 
 		oldBankValue = bankValue;
 

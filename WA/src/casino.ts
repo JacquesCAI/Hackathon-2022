@@ -1,8 +1,4 @@
 export default function casino() {
-    WA.ui.registerMenuCommand('Votre classement',{
-        iframe: '/ranking/index.html'
-    })
-
     WA.room.website.create({
         name: "casino Script",
         url: "/casinoRegister/index.html",

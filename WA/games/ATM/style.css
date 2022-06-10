@@ -1,0 +1,12 @@
+#ATM {
+    display: none;
+}
+
+body {
+    color: white;
+}
+
+#jetonsAdded {
+    display: none;
+    color: green;
+}
