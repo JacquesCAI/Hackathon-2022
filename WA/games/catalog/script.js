@@ -71,6 +71,12 @@ function showCatalog(div, catalog) {
 
             itemDiv.appendChild(h3);
 
+            const img = document.createElement("img")
+            img.src = "http://"+location.hostname+"/catalog_images/"+itemKey+".png";
+            img.style.display = "block";
+
+            itemDiv.appendChild(img);
+
             for (const attr of ['price','qte']) {
                 const attrDiv = document.createElement("div");
                 attrDiv.innerText = formatItemAttr[attr](item[attr]);

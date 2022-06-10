@@ -12,8 +12,9 @@ app.use(express.json({strict: false}));
 app.use(express.urlencoded({ extended: true }));
 app.use(xss());
 app.use(cors());
+app.use(express.static(__dirname+"/../public"))
 
-connect()
+connect();
 
 scoreRoute(app);
 catalogRoute(app);
