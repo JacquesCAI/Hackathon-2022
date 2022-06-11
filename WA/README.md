@@ -16,12 +16,28 @@ If you want to use more than one map file, just add the new map file in the root
 
 ## Installation
 
-With npm installed (comes with [node](https://nodejs.org/en/)), run the following commands into a terminal in the root directory of this project:
+With npm installed (comes with [node](https://nodejs.org/en/)), run the following command into a terminal in the two directories api-score/ and WA/ :
 
 ```shell
 npm install
+```
+
+## Run project
+
+Go into the api-score/ directory.  
+Copy the .env.dist file into .env.
+
+And with [docker](https://docs.docker.com/get-docker/) and [docker-compose](https://docs.docker.com/compose/install/) installed, run :
+```shell
+docker-compose up -d
+```
+
+Then go into the WA/ directory, and run :
+```shell
 npm run dev
 ```
+
+After that, a tab in your web browser will open on the Work Adventure interface
 
 ## Test optimized map
 You can test the optimized map as you do in production:
